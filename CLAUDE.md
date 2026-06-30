@@ -34,8 +34,17 @@ deferred reporting, so that incorrect model definitions are never left in the re
 
 Behavior, constraints, and IDE completion are provided by base classes (`ValueObject`,
 etc.). Elements are **implicitly registered** in the registry via `__init_subclass__`, so
-you do not have to sprinkle explicit decorators around for diagramming. Decorators only
-supplement grouping concerns such as `@bounded_context`.
+you do not have to sprinkle explicit decorators around for diagramming.
+
+### Bounded Context Is Declared per Module, Not per Class
+
+A bounded context maps to a module (Evans/Vernon: a context is realized as a
+package/namespace). So the context is **declared once** with a module-level
+`__bounded_context__ = "name"`; every element defined in that module inherits it at
+registration time (`resolve_context` reads the defining module). Tagging each class would
+be poor ergonomics. The `@bounded_context` decorator remains for the rare per-class
+override (an element living in a shared module) — an explicit attribute on the class wins
+over the module default.
 
 ### Data Blocks Are Pydantic, Behavior Blocks Are Plain Classes
 

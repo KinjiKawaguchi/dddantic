@@ -10,7 +10,8 @@ from __future__ import annotations
 
 from typing import Any
 
-from dddantic.building_blocks._kinds import ATTR_BASE, ATTR_CONTEXT, ATTR_KIND
+from dddantic.building_blocks._kinds import ATTR_BASE, ATTR_KIND
+from dddantic.building_blocks.context import resolve_context
 from dddantic.registry import ElementInfo, default_registry
 
 
@@ -37,6 +38,6 @@ class BehaviorBlock:
                 kind=kind,
                 name=cls.__name__,
                 module=cls.__module__,
-                bounded_context=getattr(cls, ATTR_CONTEXT, None),
+                bounded_context=resolve_context(cls),
             )
         )

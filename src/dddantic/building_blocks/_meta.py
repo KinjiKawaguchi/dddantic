@@ -20,7 +20,6 @@ from dddantic.building_blocks import _checks
 from dddantic.building_blocks._kinds import (
     ATTR_BASE,
     ATTR_CONFIG,
-    ATTR_CONTEXT,
     ATTR_IDENTITY_ALIAS,
     ATTR_KIND,
     KIND_AGGREGATE,
@@ -29,6 +28,7 @@ from dddantic.building_blocks._kinds import (
     KIND_IDENTIFIER,
     KIND_VALUE_OBJECT,
 )
+from dddantic.building_blocks.context import resolve_context
 from dddantic.registry import ElementInfo, default_registry
 
 
@@ -99,7 +99,7 @@ def _register(cls: type, kind: str) -> None:
         kind=kind,
         name=cls.__name__,
         module=cls.__module__,
-        bounded_context=getattr(cls, ATTR_CONTEXT, None),
+        bounded_context=resolve_context(cls),
     )
     default_registry.register(info)
     if kind == KIND_AGGREGATE:

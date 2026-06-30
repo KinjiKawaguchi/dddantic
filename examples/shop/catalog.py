@@ -2,35 +2,26 @@
 
 from __future__ import annotations
 
-from dddantic import (
-    AggregateRoot,
-    Identifier,
-    Repository,
-    Specification,
-    ValueObject,
-    bounded_context,
-)
+from dddantic import AggregateRoot, Identifier, Repository, Specification, ValueObject
+
+__bounded_context__ = "catalog"
 
 
-@bounded_context("catalog")
 class Money(ValueObject):
     amount: int
     currency: str
 
 
-@bounded_context("catalog")
 class ProductId(Identifier):
     value: str
 
 
-@bounded_context("catalog")
 class Product(AggregateRoot[ProductId]):
     name: str
     price: Money
     in_stock: bool
 
 
-@bounded_context("catalog")
 class Affordable(Specification[Product]):
     """Products at or below a budget."""
 
@@ -41,7 +32,6 @@ class Affordable(Specification[Product]):
         return candidate.price.amount <= self.budget
 
 
-@bounded_context("catalog")
 class ProductRepository(Repository[Product]):
     def __init__(self) -> None:
         self._items: dict[str, Product] = {}

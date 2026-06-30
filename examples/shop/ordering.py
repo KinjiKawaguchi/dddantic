@@ -17,41 +17,36 @@ from dddantic import (
     Repository,
     Specification,
     ValueObject,
-    bounded_context,
 )
 from examples.shop.catalog import Money, ProductId
 
+__bounded_context__ = "ordering"
 
-@bounded_context("ordering")
+
 class CustomerId(Identifier):
     value: str
 
 
-@bounded_context("ordering")
 class Customer(AggregateRoot[CustomerId]):
     name: str
     email: str
 
 
-@bounded_context("ordering")
 class OrderId(Identifier):
     value: str
 
 
-@bounded_context("ordering")
 class OrderLine(ValueObject):
     product: ProductId  # cross-context identity reference → catalog
     quantity: int
     unit_price: Money
 
 
-@bounded_context("ordering")
 class OrderPlaced(DomainEvent):
     occurred_on: datetime
     order_id: str
 
 
-@bounded_context("ordering")
 class Order(AggregateRoot[OrderId]):
     customer: CustomerId  # same-context identity reference
     lines: tuple[OrderLine, ...]
@@ -61,7 +56,6 @@ class Order(AggregateRoot[OrderId]):
         return sum(line.quantity * line.unit_price.amount for line in self.lines)
 
 
-@bounded_context("ordering")
 class HighValueOrder(Specification[Order]):
     """Orders whose total is at or above a threshold."""
 
@@ -72,7 +66,6 @@ class HighValueOrder(Specification[Order]):
         return candidate.total >= self.threshold
 
 
-@bounded_context("ordering")
 class OrderRepository(Repository[Order]):
     def __init__(self) -> None:
         self._orders: dict[str, Order] = {}
@@ -84,7 +77,6 @@ class OrderRepository(Repository[Order]):
         return self._orders[order_id.value]
 
 
-@bounded_context("ordering")
 class CustomerRepository(Repository[Customer]):
     def __init__(self) -> None:
         self._customers: dict[str, Customer] = {}
@@ -96,7 +88,6 @@ class CustomerRepository(Repository[Customer]):
         return self._customers[customer_id.value]
 
 
-@bounded_context("ordering")
 class OrderFactory(Factory):
     """Assembles a valid order together with its placed event."""
 
@@ -113,7 +104,6 @@ class OrderFactory(Factory):
         return order
 
 
-@bounded_context("ordering")
 class CheckoutService(DomainService):
     """Coordinates the factory and repository to place and persist an order."""
 
