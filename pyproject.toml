@@ -1,0 +1,100 @@
+[project]
+name = "dddantic"
+version = "0.1.0"
+description = "Pydantic-based building blocks for Domain-Driven Design: typed tactical patterns, invariant enforcement, and model diagramming"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+authors = [{ name = "KinjiKawaguchi" }]
+keywords = [
+    "ddd",
+    "domain-driven-design",
+    "pydantic",
+    "modeling",
+    "diagram",
+    "aggregate",
+    "value-object",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Libraries :: Application Frameworks",
+    "Typing :: Typed",
+]
+dependencies = ["pydantic>=1.10"]
+
+[project.urls]
+Homepage = "https://github.com/KinjiKawaguchi/dddantic"
+Repository = "https://github.com/KinjiKawaguchi/dddantic"
+Issues = "https://github.com/KinjiKawaguchi/dddantic/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dddantic"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+    "ruff>=0.12",
+    "pyrefly>=0.16",
+    "pip-audit>=2.0",
+    "pre-commit>=4.0",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 99
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D1",
+    "COM812",
+    "ISC001",
+    "D203",
+    "D213",
+    # 日本語ドキュメント/メッセージ由来の偽陽性
+    "D400",
+    "D401",
+    "D415",
+    "RUF001",
+    "RUF002",
+    "RUF003",
+    # 例外メッセージ・pydantic パターンに対する過剰指摘
+    "EM101",
+    "EM102",
+    "TRY003",
+    "RUF012",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"src/dddantic/_compat.py" = ["ANN401"]
+"src/dddantic/building_blocks/_introspect.py" = ["ANN401"]
+"src/dddantic/building_blocks/_meta.py" = ["ANN401"]
+"tests/**/*.py" = ["S101", "ANN", "D", "PLR2004", "SLF001", "TC001", "TC003", "DTZ001"]
+
+[tool.pyrefly]
+project-includes = ["src"]
+python-version = "3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers -ra"
+
+[tool.coverage.run]
+source = ["dddantic"]
+
+[tool.coverage.report]
+show_missing = true
+# v1/v2 の相互排他な版分岐があるため、単一の pydantic レグで 100% には到達しない。
+fail_under = 90
