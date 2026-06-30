@@ -38,13 +38,30 @@ def has_mutable_container(annotation: Any) -> bool:
     return typing.get_origin(annotation) in _MUTABLE_CONTAINER_ORIGINS
 
 
+def first_type_arg(cls: type, base: type) -> Any:
+    """Return the first type argument that ``cls`` supplies to ``base``.
+
+    For ``class R(Repository[Order])`` and ``base=Repository`` this returns ``Order``.
+    Returns ``None`` when ``base`` is not parameterized in ``cls``'s original bases.
+    """
+    for orig in getattr(cls, "__orig_bases__", ()):
+        origin = typing.get_origin(orig)
+        if origin is base or (isinstance(origin, type) and issubclass(origin, base)):
+            args = typing.get_args(orig)
+            if args:
+                return args[0]
+    return None
+
+
 def type_label(annotation: Any) -> str:
     """Format annotation into readable string for Mermaid display."""
     origin = typing.get_origin(annotation)
     if origin is None:
         return getattr(annotation, "__name__", str(annotation))
     args = ", ".join(
-        type_label(arg) for arg in typing.get_args(annotation) if arg is not type(None)
+        type_label(arg)
+        for arg in typing.get_args(annotation)
+        if arg is not type(None) and arg is not Ellipsis
     )
     origin_name = getattr(origin, "__name__", str(origin))
     return f"{origin_name}~{args}~" if args else origin_name

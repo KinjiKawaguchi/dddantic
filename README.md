@@ -9,15 +9,31 @@ and context maps**.
 
 ## Features
 
-- **Base models for DDD elements** — `Entity` / `ValueObject` / `AggregateRoot` /
-  `DomainEvent` and more, provided as Pydantic models.
-- **Invariant enforcement** — DDD constraints are checked at class-definition time:
-  value objects are immutable with value equality, entities use identity-based
-  equality, and aggregates may reference other aggregates by ID only.
-- **Analysis and diagramming** — introspects the defined elements and emits their
-  composition and reference relationships as a Mermaid class diagram.
-- **Pydantic v1 / v2 dual support** — adopt it against whichever version your
-  existing assets use.
+- **A base for every tactical pattern** — data elements (`ValueObject`, `Identifier`,
+  `Entity`, `AggregateRoot`, `DomainEvent`) as Pydantic models, and behavior elements
+  (`Specification`, `Repository`, `DomainService`, `Factory`) as plain typed bases.
+- **Invariant enforcement at class-definition time** — value objects are immutable
+  with value equality, entities use identity-based equality, aggregates reference other
+  aggregates by ID only, and a repository's type parameter must be an aggregate root.
+- **Analysis and diagramming** — introspects the registered elements and emits their
+  composition and reference relationships (including repository → aggregate and
+  specification → candidate) as a Mermaid class diagram, optionally per bounded context.
+- **Pydantic v1 / v2 dual support** — adopt it against whichever version your existing
+  assets use.
+
+## Building blocks
+
+| Pattern | Base | Enforced invariant |
+|---|---|---|
+| Value Object | `ValueObject` | immutable, value equality, no mutable containers |
+| Identifier | `Identifier` | single-field value object |
+| Entity | `Entity[TId]` | `id` required; equality/hash by identity |
+| Aggregate Root | `AggregateRoot[TId]` | other aggregates by ID only; accumulates events |
+| Domain Event | `DomainEvent` | immutable + `occurred_on` |
+| Specification | `Specification[T]` | `is_satisfied_by`, composable with `&` `\|` `~` |
+| Repository | `Repository[TRoot]` | `TRoot` must be an `AggregateRoot` |
+| Domain Service | `DomainService` | marker (registry / diagram participation) |
+| Factory | `Factory` | marker (registry / diagram participation) |
 
 ## Installation
 
@@ -25,21 +41,27 @@ and context maps**.
 pip install dddantic   # once published
 ```
 
-## Example (planned API)
+## Example
 
 ```python
-from dddantic import ValueObject, Entity, AggregateRoot
+from dddantic import AggregateRoot, Identifier, Repository, Specification, ValueObject
 
 class Money(ValueObject):
     amount: int
     currency: str          # immutable, value equality; cannot hold an identifier
 
-class OrderId(ValueObject):
-    value: str
+class OrderId(Identifier):
+    value: str             # single-value identity
 
-class Order(AggregateRoot):
-    id: OrderId            # equality by identity
-    total: Money           # an aggregate composes VOs / child entities; other aggregates by ID only
+class Order(AggregateRoot[OrderId]):
+    total: Money           # composes VOs / child entities; other aggregates by ID only
+
+class HighValueOrder(Specification[Order]):
+    def is_satisfied_by(self, candidate: Order) -> bool:
+        return candidate.total.amount >= 10_000
+
+class OrderRepository(Repository[Order]):   # TRoot must be an AggregateRoot
+    ...
 ```
 
 See [CLAUDE.md](CLAUDE.md) for the detailed design rationale.
