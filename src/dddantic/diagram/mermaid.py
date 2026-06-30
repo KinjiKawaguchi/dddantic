@@ -53,10 +53,17 @@ _COMPOSITION_KINDS = (KIND_VALUE_OBJECT, KIND_ENTITY, KIND_DOMAIN_EVENT)
 _IDENTITY_KINDS = (KIND_ENTITY, KIND_AGGREGATE)
 
 
-def to_mermaid(registry: Registry | None = None, within: str | None = None) -> str:
+def to_mermaid(
+    registry: Registry | None = None,
+    within: str | None = None,
+    *,
+    group_by_context: bool = False,
+) -> str:
     """Return Mermaid ``classDiagram`` text.
 
     If ``within`` is specified, only elements in that bounded context are drawn.
+    If ``group_by_context`` is set (and ``within`` is not), classes are wrapped in a
+    Mermaid ``namespace`` per bounded context, giving a single grouped overview.
     """
     registry = registry or default_registry
     elements = [
@@ -65,17 +72,39 @@ def to_mermaid(registry: Registry | None = None, within: str | None = None) -> s
     known = {info.cls for info in elements}
 
     lines = ["classDiagram"]
-    edges: list[str] = []
-    for info in elements:
-        lines.extend(_class_block(info))
-        edges.extend(_edges_for(info, registry, known))
+    if group_by_context and within is None:
+        lines.extend(_grouped_class_lines(elements))
+    else:
+        for info in elements:
+            lines.extend(_class_block(info))
 
     seen: set[str] = set()
-    for edge in edges:
-        if edge not in seen:
-            seen.add(edge)
-            lines.append(edge)
+    for info in elements:
+        for edge in _edges_for(info, registry, known):
+            if edge not in seen:
+                seen.add(edge)
+                lines.append(edge)
     return "\n".join(lines)
+
+
+def _grouped_class_lines(elements: list[ElementInfo]) -> list[str]:
+    groups: dict[str, list[ElementInfo]] = {}
+    ungrouped: list[ElementInfo] = []
+    for info in elements:
+        if info.bounded_context is None:
+            ungrouped.append(info)
+        else:
+            groups.setdefault(info.bounded_context, []).append(info)
+
+    lines: list[str] = []
+    for info in ungrouped:
+        lines.extend(_class_block(info))
+    for context, infos in groups.items():
+        lines.append(f"namespace {context} {{")
+        for info in infos:
+            lines.extend(f"  {line}" for line in _class_block(info))
+        lines.append("}")
+    return lines
 
 
 def _class_block(info: ElementInfo) -> list[str]:
