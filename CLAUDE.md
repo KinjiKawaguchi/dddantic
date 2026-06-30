@@ -20,9 +20,9 @@ The v1/v2 API differences (`model_config`/`Config`, `model_fields`/`__fields__`,
 `_compat.py`**, and the core logic stays unified. Version branching is driven by
 `pydantic.VERSION`.
 
-Supported Python is 3.10–3.14. CI continuously validates both lineages with a matrix of
-python × pydantic{v1,v2} (`.github/workflows/ci.yml`). However, since pydantic v1 does
-not support 3.13+, the v1 legs are limited to 3.12 (3.13/3.14 run v2 only).
+Supported Python is 3.10–3.14. CI continuously validates the full matrix of
+python × pydantic{v1,v2} (`.github/workflows/ci.yml`); pydantic 1.10.26 runs on every
+supported Python, including 3.13 and 3.14, so no matrix leg is excluded.
 
 ### Constraint Violations Raise at Class-Definition Time
 

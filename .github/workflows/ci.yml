@@ -36,12 +36,6 @@ jobs:
         pydantic-spec:
           - "pydantic>=1.10,<2"
           - "pydantic>=2,<3"
-        exclude:
-          # pydantic v1 does not support Python 3.13+.
-          - python-version: "3.13"
-            pydantic-spec: "pydantic>=1.10,<2"
-          - python-version: "3.14"
-            pydantic-spec: "pydantic>=1.10,<2"
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v8.1.0
