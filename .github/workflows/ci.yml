@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.1.0
+      - run: uv sync --frozen
+      - run: uv run ruff check src/ tests/
+      - run: uv run ruff format --check src/ tests/
+
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.1.0
+      - run: uv sync --frozen
+      - run: uv run pyrefly check src/
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        pydantic-spec:
+          - "pydantic>=1.10,<2"
+          - "pydantic>=2,<3"
+        exclude:
+          # pydantic v1 does not support Python 3.13+.
+          - python-version: "3.13"
+            pydantic-spec: "pydantic>=1.10,<2"
+          - python-version: "3.14"
+            pydantic-spec: "pydantic>=1.10,<2"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.1.0
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --frozen
+      - name: Pin pydantic for this matrix leg
+        run: uv pip install "${{ matrix.pydantic-spec }}"
+      - run: uv run pytest --cov=dddantic --cov-report=term-missing -q
+
+  all-checks-pass:
+    if: always()
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          if [[ "${{ needs.lint.result }}" != "success" ]] || \
+             [[ "${{ needs.typecheck.result }}" != "success" ]] || \
+             [[ "${{ needs.test.result }}" != "success" ]]; then
+            echo "One or more checks failed"
+            exit 1
+          fi
