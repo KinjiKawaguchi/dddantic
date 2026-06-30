@@ -11,7 +11,7 @@ from datetime import datetime, timezone
 
 from dddantic import diagram
 from examples.shop import domain  # noqa: F401  registers every context
-from examples.shop.catalog import Money, Product, ProductId, ProductRepository
+from examples.shop.catalog import Product, ProductId, ProductRepository
 from examples.shop.fulfillment import StockItem, StockItemId, StockItemRepository
 from examples.shop.ordering import (
     CheckoutService,
@@ -22,6 +22,7 @@ from examples.shop.ordering import (
     OrderLine,
     OrderRepository,
 )
+from examples.shop.shared import Money
 
 
 def main() -> None:

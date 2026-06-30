@@ -18,12 +18,12 @@ graph LR
 
 ```mermaid
 classDiagram
+class Money {
+  <<ValueObject>>
+  +int amount
+  +str currency
+}
 namespace catalog {
-  class Money {
-    <<ValueObject>>
-    +int amount
-    +str currency
-  }
   class ProductId {
     <<Identifier>>
     +str value
@@ -143,11 +143,6 @@ ShipmentRepository ..> Shipment : manages
 
 ```mermaid
 classDiagram
-class Money {
-  <<ValueObject>>
-  +int amount
-  +str currency
-}
 class ProductId {
   <<Identifier>>
   +str value
@@ -165,7 +160,6 @@ class Affordable {
 class ProductRepository {
   <<Repository>>
 }
-Product *-- Money
 Affordable ..> Product : checks
 ProductRepository ..> Product : manages
 ```

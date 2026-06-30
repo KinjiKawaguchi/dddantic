@@ -12,6 +12,11 @@ module joins it, no per-class decorators:
 | `catalog` | [`shop/catalog.py`](shop/catalog.py) | `Product` | `Money`, `Affordable` (spec) |
 | `ordering` | [`shop/ordering.py`](shop/ordering.py) | `Customer`, `Order` | `OrderPlaced` (event), `HighValueOrder` (spec), `OrderFactory`, `CheckoutService` |
 | `fulfillment` | [`shop/fulfillment.py`](shop/fulfillment.py) | `StockItem`, `Shipment` | `ShipmentDispatched` (event) |
+| _(shared kernel)_ | [`shop/shared.py`](shop/shared.py) | — | `Money` — used by `catalog` and `ordering` |
+
+`shop/shared.py` declares no `__bounded_context__`, so `Money` belongs to no single
+context: the diagram draws it outside every namespace with composition edges crossing in
+from each context that uses it.
 
 Cross-context links are by identity only, which is what makes the context map
 meaningful:

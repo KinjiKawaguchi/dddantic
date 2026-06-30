@@ -18,7 +18,8 @@ from dddantic import (
     Specification,
     ValueObject,
 )
-from examples.shop.catalog import Money, ProductId
+from examples.shop.catalog import ProductId
+from examples.shop.shared import Money
 
 __bounded_context__ = "ordering"
 

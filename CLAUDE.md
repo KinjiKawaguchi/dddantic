@@ -46,6 +46,15 @@ be poor ergonomics. The `@bounded_context` decorator remains for the rare per-cl
 override (an element living in a shared module) — an explicit attribute on the class wins
 over the module default.
 
+A bounded context is **not** "the set of an aggregate root's reachable elements". An
+aggregate belongs to exactly one context, but two things deliberately cross: shared-kernel
+value objects (used by aggregates in several contexts) and the foreign aggregate ids one
+aggregate holds to reference another. So context is **not inferred from the aggregate
+graph**. The shared kernel is expressed by placing those value objects in a module with no
+`__bounded_context__`: they stay unassigned and the diagram renders them outside every
+namespace, with composition edges crossing in from each context that uses them. See
+`examples/shop/shared.py`.
+
 ### Data Blocks Are Pydantic, Behavior Blocks Are Plain Classes
 
 The tactical patterns split in two. **Data** blocks (ValueObject, Identifier, Entity,

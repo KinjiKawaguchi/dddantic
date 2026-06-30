@@ -2,14 +2,10 @@
 
 from __future__ import annotations
 
-from dddantic import AggregateRoot, Identifier, Repository, Specification, ValueObject
+from dddantic import AggregateRoot, Identifier, Repository, Specification
+from examples.shop.shared import Money
 
 __bounded_context__ = "catalog"
-
-
-class Money(ValueObject):
-    amount: int
-    currency: str
 
 
 class ProductId(Identifier):
