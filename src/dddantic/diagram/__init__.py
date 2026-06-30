@@ -1,4 +1,4 @@
-"""作図の公開API。"""
+"""Public API for diagramming."""
 
 from dddantic.diagram.mermaid import to_mermaid
 

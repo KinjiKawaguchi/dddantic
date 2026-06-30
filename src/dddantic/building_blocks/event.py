@@ -1,7 +1,8 @@
-"""DomainEvent。
+"""DomainEvent.
 
-集約が発行する、過去に起きた出来事の不変な記録。ValueObject と同じく不変で、
-発生時刻 ``occurred_on`` を持つ（Vernon: aggregates publish domain events）。
+Immutable record of past occurrences published by aggregates. Like ValueObject,
+immutable and carries ``occurred_on`` timestamp (Vernon: aggregates publish
+domain events).
 """
 
 from datetime import datetime
@@ -10,7 +11,7 @@ from dddantic.building_blocks.value_object import ValueObject
 
 
 class DomainEvent(ValueObject):
-    """ドメインで起きた出来事の不変な記録。"""
+    """Immutable record of an event that occurred in the domain."""
 
     __dddantic_base__ = True
     __dddantic_kind__ = "domain_event"

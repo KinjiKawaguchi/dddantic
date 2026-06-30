@@ -1,8 +1,8 @@
-"""Entity。
+"""Entity.
 
-identity（連続性の糸）で同一視される。等価性とハッシュは identity のみで決まり、
-属性では決まらない（Evans: an Entity is defined by a thread of continuity and identity）。
-``Entity[TId]`` のように identity の型を指定して使う。
+Identified by identity (thread of continuity). Equality and hash depend only on
+identity, not attributes (Evans: an Entity is defined by a thread of continuity
+and identity). Use with explicit identity type like ``Entity[TId]``.
 """
 
 from typing import Generic, TypeVar
@@ -14,12 +14,12 @@ TId = TypeVar("TId")
 
 
 class Entity(GenericModelBase, Generic[TId], metaclass=DddanticMeta):
-    """identity を持つ可変オブジェクト。
+    """Mutable object with identity.
 
-    identity を別名で参照したい場合は ``__identity_alias__`` を指定する::
+    To reference identity by an alias, specify ``__identity_alias__``::
 
         class Book(AggregateRoot[ISBN]):
-            __identity_alias__ = "isbn"   # book.isbn が book.id を返す
+            __identity_alias__ = "isbn"   # book.isbn returns book.id
     """
 
     __dddantic_base__ = True

@@ -1,4 +1,4 @@
-"""dddantic — Pydantic ベースの DDD 戦術的構成要素。"""
+"""dddantic — Pydantic-based DDD tactical building blocks."""
 
 from dddantic import diagram
 from dddantic.building_blocks import (

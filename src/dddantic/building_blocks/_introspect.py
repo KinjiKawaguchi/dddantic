@@ -1,7 +1,7 @@
-"""フィールドの型注釈から、参照している具象クラスを取り出すヘルパ。
+"""Helper to extract concrete classes referenced in field type annotations.
 
-``list[Money]`` や ``Optional[CustomerId]`` のような合成型を展開し、
-制約検査と作図の双方が同じ規則で関係を判定できるようにする。
+Expands compound types like ``list[Money]`` and ``Optional[CustomerId]`` so
+constraint checks and diagramming apply the same rules for relationship detection.
 """
 
 from __future__ import annotations
@@ -13,9 +13,9 @@ _MUTABLE_CONTAINER_ORIGINS = (list, set, dict, bytearray)
 
 
 def referenced_types(annotation: Any) -> tuple[type, ...]:
-    """注釈に現れる具象クラスを再帰的に集めて返す。
+    """Recursively collect concrete classes appearing in annotation.
 
-    ``Optional[X]`` の ``None`` は除外する。型でないもの（TypeVar 等）は無視。
+    Excludes ``None`` from ``Optional[X]``. Ignores non-type objects (TypeVar, etc).
     """
     origin = typing.get_origin(annotation)
     if origin is None:
@@ -29,9 +29,9 @@ def referenced_types(annotation: Any) -> tuple[type, ...]:
 
 
 def has_mutable_container(annotation: Any) -> bool:
-    """注釈の最外殻が可変コンテナ（list/set/dict 等）かを判定する。
+    """Check if outermost layer of annotation is a mutable container (list/set/dict).
 
-    素の ``list`` と パラメータ付き ``list[X]`` の双方を検出する。
+    Detects both bare ``list`` and parameterized ``list[X]``.
     """
     if annotation in _MUTABLE_CONTAINER_ORIGINS:
         return True
@@ -39,7 +39,7 @@ def has_mutable_container(annotation: Any) -> bool:
 
 
 def type_label(annotation: Any) -> str:
-    """Mermaid 表示用に注釈を読みやすい文字列へ整形する。"""
+    """Format annotation into readable string for Mermaid display."""
     origin = typing.get_origin(annotation)
     if origin is None:
         return getattr(annotation, "__name__", str(annotation))

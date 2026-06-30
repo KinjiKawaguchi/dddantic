@@ -1,7 +1,8 @@
-"""ValueObject と Identifier。
+"""ValueObject and Identifier.
 
-ValueObject は不変・値等価・hashable（Evans: immutable / equality by attributes）。
-Identifier は identity を表す単一値の ValueObject（Vernon: model identity as a VO）。
+ValueObject is immutable, value-equal, and hashable (Evans: immutable / equality
+by attributes). Identifier is a single-value ValueObject representing identity
+(Vernon: model identity as a VO).
 """
 
 from dddantic._compat import BaseModel
@@ -9,7 +10,7 @@ from dddantic.building_blocks._meta import DddanticMeta
 
 
 class ValueObject(BaseModel, metaclass=DddanticMeta):
-    """属性の値で同一視される不変オブジェクト。"""
+    """Immutable object identified by its attribute values."""
 
     __dddantic_base__ = True
     __dddantic_kind__ = "value_object"
@@ -17,9 +18,9 @@ class ValueObject(BaseModel, metaclass=DddanticMeta):
 
 
 class Identifier(ValueObject):
-    """identity を表す単一値の ValueObject。
+    """Single-value ValueObject representing identity.
 
-    具象 identity はこれを継承し ``value`` を1つ宣言する::
+    Concrete identities inherit from this and declare a single ``value``::
 
         class OrderId(Identifier):
             value: UUID

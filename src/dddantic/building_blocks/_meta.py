@@ -1,8 +1,8 @@
-"""building_blocks の基盤メタクラス。
+"""Foundation metaclass for building_blocks.
 
-pydantic の ModelMetaclass を継承し、(1) 意味的な設定を版に応じて注入し、
-(2) フィールド構築後に不変条件を検査し、(3) レジストリへ登録する。
-``__init_subclass__`` ではフィールドが未構築のため、メタクラスで行う。
+Inherits from pydantic's ModelMetaclass to (1) inject semantic config based on version,
+(2) check invariants after field construction, (3) register with registry.
+Metaclass is needed instead of ``__init_subclass__`` because fields are not yet built.
 """
 
 from __future__ import annotations
@@ -33,7 +33,7 @@ from dddantic.registry import ElementInfo, default_registry
 
 
 class DddanticMeta(ModelMetaclass):
-    """設定注入・制約検査・登録を担うメタクラス。"""
+    """Metaclass responsible for config injection, constraint checking, and registration."""
 
     def __new__(
         mcs,
@@ -64,7 +64,7 @@ def _inject_config(namespace: dict[str, Any], semantic: dict[str, Any]) -> None:
 
 def _process_class(cls: type, *, is_base: bool) -> None:
     if is_base or "[" in cls.__name__:
-        return  # 基底クラス自身と generic 中間生成物は対象外
+        return  # Base classes themselves and generic intermediate artifacts are excluded
     kind = getattr(cls, ATTR_KIND, None)
     if kind is None:
         return

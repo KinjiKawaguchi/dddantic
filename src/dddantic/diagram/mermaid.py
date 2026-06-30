@@ -1,8 +1,8 @@
-"""登録済みの DDD 要素から Mermaid のクラス図を生成する。
+"""Generate Mermaid class diagrams from registered DDD elements.
 
-関係の規則:
-- 集約/エンティティが ValueObject・子エンティティを保持 → composition ``*--``
-- 他集約の Identifier 型を保持 → reference ``..>``（identity 参照）
+Relationship rules:
+- Aggregate/Entity holds ValueObject or child Entity → composition ``*--``
+- Holds other aggregate's Identifier type → reference ``..>`` (identity reference)
 """
 
 from __future__ import annotations
@@ -31,9 +31,9 @@ _IDENTITY_KINDS = (KIND_ENTITY, KIND_AGGREGATE)
 
 
 def to_mermaid(registry: Registry | None = None, within: str | None = None) -> str:
-    """Mermaid ``classDiagram`` テキストを返す。
+    """Return Mermaid ``classDiagram`` text.
 
-    ``within`` を指定すると、その境界づけられたコンテキストの要素だけを描く。
+    If ``within`` is specified, only elements in that bounded context are drawn.
     """
     registry = registry or default_registry
     elements = [

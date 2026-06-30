@@ -1,7 +1,7 @@
-"""pydantic v1/v2 の差異を吸収する唯一の層。
+"""Sole compatibility layer absorbing pydantic v1/v2 differences.
 
-本体ロジックは `pydantic.VERSION` を直接参照せず、このモジュールが公開する
-抽象だけに依存する。
+Core logic does not directly reference `pydantic.VERSION` but depends only on
+the abstractions exposed by this module.
 """
 
 from __future__ import annotations
@@ -23,7 +23,7 @@ else:
 
     _GenericModelBase = BaseModel
 
-if TYPE_CHECKING:  # 型注釈用の安定したエイリアス
+if TYPE_CHECKING:  # Stable aliases for type annotations
     from pydantic._internal._model_construction import ModelMetaclass
 
     GenericModelBase = BaseModel
@@ -43,7 +43,7 @@ __all__ = [
     "translate_config",
 ]
 
-# 凍結違反時の例外は v2=ValidationError / v1=TypeError と割れる。
+# Frozen violations raise different exceptions: v2=ValidationError / v1=TypeError
 FROZEN_VIOLATION_ERRORS: tuple[type[Exception], ...] = (
     TypeError,
     pydantic.ValidationError,
@@ -51,24 +51,24 @@ FROZEN_VIOLATION_ERRORS: tuple[type[Exception], ...] = (
 
 
 def field_annotations(cls: type) -> dict[str, Any]:
-    """モデルの「フィールド名 → 解決済みの型」を返す。"""
+    """Return model's field names mapped to resolved types."""
     if PYDANTIC_V1:
         return {name: field.outer_type_ for name, field in cls.__fields__.items()}
     return {name: field.annotation for name, field in cls.model_fields.items()}
 
 
 def is_unresolved(annotation: Any) -> bool:
-    """型がまだ束縛されていない（generic 未指定）かを判定する。"""
+    """Check if type is unbound (generic not yet specified)."""
     if isinstance(annotation, TypeVar):
         return True
-    # pydantic v1 が generic 中間クラスに付ける未解決マーカー
+    # pydantic v1 unresolved marker attached to generic intermediate classes
     return type(annotation).__name__ == "DeferredType"
 
 
 def translate_config(semantic: dict[str, Any]) -> dict[str, Any]:
-    """意味的な設定キーを、稼働中の pydantic 版の設定へ翻訳する。
+    """Translate semantic config keys to running pydantic version's config.
 
-    semantic は ``{"frozen": True, "validate_assignment": True}`` の形。
+    semantic is in the form ``{"frozen": True, "validate_assignment": True}``.
     """
     config: dict[str, Any] = {}
     if semantic.get("frozen"):

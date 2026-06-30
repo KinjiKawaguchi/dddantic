@@ -1,7 +1,7 @@
-"""要素種別と内部マーカー属性の定数。
+"""Constants for element types and internal marker attributes.
 
-具象クラスを import せず文字列 kind で種別を扱うことで、registry と
-building_blocks の循環依存を避ける。
+Avoids circular dependency between registry and building_blocks by using string
+kind rather than importing concrete classes.
 """
 
 KIND_VALUE_OBJECT = "value_object"

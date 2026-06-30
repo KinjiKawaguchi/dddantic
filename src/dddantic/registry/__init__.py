@@ -1,4 +1,4 @@
-"""要素レジストリの公開API。"""
+"""Public API for element registry."""
 
 from dddantic.registry.registry import ElementInfo, Registry, default_registry
 

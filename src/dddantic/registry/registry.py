@@ -1,7 +1,8 @@
-"""定義された DDD 要素を収集するレジストリ。
+"""Registry collecting defined DDD elements.
 
-building_blocks には依存しない（依存方向は building_blocks → registry の一方向）。
-要素の種別は文字列 kind で持ち、具象クラスを import しないことで循環を避ける。
+Does not depend on building_blocks (dependency direction is one-way: building_blocks
+→ registry). Element types are held as string kind, avoiding circular imports by not
+importing concrete classes.
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ElementInfo:
-    """登録された 1 要素のメタdata。"""
+    """Metadata for a single registered element."""
 
     cls: type
     kind: str
@@ -21,7 +22,7 @@ class ElementInfo:
 
 
 class Registry:
-    """要素と「id 型 → 集約」の対応を保持する。"""
+    """Holds elements and mapping of "id type → aggregate"."""
 
     def __init__(self) -> None:
         self._elements: dict[type, ElementInfo] = {}
@@ -43,7 +44,7 @@ class Registry:
         return self._id_type_to_aggregate.get(id_type)
 
     def clear(self) -> None:
-        """テスト用にレジストリを空にする。"""
+        """Clear registry for testing."""
         self._elements.clear()
         self._id_type_to_aggregate.clear()
 
