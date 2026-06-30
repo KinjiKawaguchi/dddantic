@@ -1,7 +1,7 @@
-"""境界づけられたコンテキストのタグ付け。
+"""Tagging for bounded contexts.
 
-要素クラスを境界づけられたコンテキストに割り当て、作図でコンテキスト単位に
-グルーピングできるようにする。
+Assigns element classes to bounded contexts, enabling diagramming to group
+by context.
 """
 
 from __future__ import annotations
@@ -19,7 +19,7 @@ _T = TypeVar("_T", bound=type)
 
 
 def bounded_context(name: str) -> Callable[[_T], _T]:
-    """要素クラスを境界づけられたコンテキスト ``name`` に割り当てるデコレーター。"""
+    """Decorator assigning an element class to bounded context ``name``."""
 
     def decorate(cls: _T) -> _T:
         setattr(cls, ATTR_CONTEXT, name)

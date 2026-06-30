@@ -1,4 +1,4 @@
-"""DDD 戦術的構成要素の公開API。"""
+"""Public API for DDD tactical building blocks."""
 
 from dddantic.building_blocks.aggregate import AggregateRoot
 from dddantic.building_blocks.context import bounded_context

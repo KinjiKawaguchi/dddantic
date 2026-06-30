@@ -1,8 +1,8 @@
-"""AggregateRoot。
+"""AggregateRoot.
 
-整合性の境界。外部からはルート経由でのみアクセスし、他の集約は identity で参照する
-（Evans: consistency boundary / Vernon: reference other aggregates by identity）。
-発生したドメインイベントを蓄積し、コミット境界で取り出せる。
+Consistency boundary. Access only through the root from outside; reference other
+aggregates by identity (Evans: consistency boundary / Vernon: reference other
+aggregates by identity). Accumulates domain events and exposes them at commit boundary.
 """
 
 from typing import Generic
@@ -13,7 +13,7 @@ from dddantic.building_blocks.event import DomainEvent
 
 
 class AggregateRoot(Entity[TId], Generic[TId]):
-    """集約の境界を成すルートエンティティ。"""
+    """Root entity forming the aggregate boundary."""
 
     __dddantic_base__ = True
     __dddantic_kind__ = "aggregate"
@@ -21,16 +21,16 @@ class AggregateRoot(Entity[TId], Generic[TId]):
     _events: list[DomainEvent] = PrivateAttr(default_factory=list)
 
     def register_event(self, event: DomainEvent) -> None:
-        """発生したドメインイベントを記録する。"""
+        """Record an occurred domain event."""
         self._events.append(event)
 
     def collect_events(self) -> tuple[DomainEvent, ...]:
-        """蓄積したイベントを取り出し、内部キューを空にする。"""
+        """Drain accumulated events and clear the internal queue."""
         drained = tuple(self._events)
         self._events.clear()
         return drained
 
     @property
     def pending_events(self) -> tuple[DomainEvent, ...]:
-        """未取得のイベントを読み取り専用で覗く。"""
+        """Peek at pending events in read-only mode."""
         return tuple(self._events)

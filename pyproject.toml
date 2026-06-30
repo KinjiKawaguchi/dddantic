@@ -63,14 +63,14 @@ ignore = [
     "ISC001",
     "D203",
     "D213",
-    # 日本語ドキュメント/メッセージ由来の偽陽性
+    # Docstring punctuation/mood rules we deliberately do not enforce
     "D400",
     "D401",
     "D415",
     "RUF001",
     "RUF002",
     "RUF003",
-    # 例外メッセージ・pydantic パターンに対する過剰指摘
+    # Over-strict about exception-message and pydantic patterns
     "EM101",
     "EM102",
     "TRY003",
@@ -96,5 +96,5 @@ source = ["dddantic"]
 
 [tool.coverage.report]
 show_missing = true
-# v1/v2 の相互排他な版分岐があるため、単一の pydantic レグで 100% には到達しない。
+# A single pydantic version cannot reach 100% due to mutually exclusive v1/v2 branches.
 fail_under = 90

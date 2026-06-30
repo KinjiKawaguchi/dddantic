@@ -1,46 +1,50 @@
 # dddantic
 
-> ⚠️ 開発初期（alpha）。API は未確定です。
+> ⚠️ Early development (alpha). The API is not yet stable.
 
-Pydantic をベースに、DDD（ドメイン駆動設計）の戦術的設計要素を**型付きの構成要素**として提供する
-ライブラリです。各要素に DDD の不変条件を強制し、定義したモデル群を解析して
-**モデル図（Mermaid）やコンテキストマップを生成**します。
+A Pydantic-based library that provides the tactical building blocks of DDD
+(Domain-Driven Design) as **typed components**. It enforces DDD invariants on each
+element and analyzes the models you define to **generate model diagrams (Mermaid)
+and context maps**.
 
-## 何ができるか
+## Features
 
-- **DDD 要素のベースモデル** — `Entity` / `ValueObject` / `AggregateRoot` / `DomainEvent` などを
-  Pydantic モデルとして提供。
-- **不変条件の強制** — Value Object は不変・値等価、Entity は同一性ベースの等価、集約は他集約を
-  ID でしか参照できない、といった DDD の制約をクラス定義時に検査します。
-- **解析と作図** — 定義された要素を内省し、包含・参照関係を Mermaid のクラス図として出力します。
-- **Pydantic v1 / v2 両対応** — 既存資産のバージョンに合わせて導入できます。
+- **Base models for DDD elements** — `Entity` / `ValueObject` / `AggregateRoot` /
+  `DomainEvent` and more, provided as Pydantic models.
+- **Invariant enforcement** — DDD constraints are checked at class-definition time:
+  value objects are immutable with value equality, entities use identity-based
+  equality, and aggregates may reference other aggregates by ID only.
+- **Analysis and diagramming** — introspects the defined elements and emits their
+  composition and reference relationships as a Mermaid class diagram.
+- **Pydantic v1 / v2 dual support** — adopt it against whichever version your
+  existing assets use.
 
-## インストール
+## Installation
 
 ```bash
-pip install dddantic   # 公開後
+pip install dddantic   # once published
 ```
 
-## イメージ（予定 API）
+## Example (planned API)
 
 ```python
 from dddantic import ValueObject, Entity, AggregateRoot
 
 class Money(ValueObject):
     amount: int
-    currency: str          # 不変・値等価。識別子は持てない
+    currency: str          # immutable, value equality; cannot hold an identifier
 
 class OrderId(ValueObject):
     value: str
 
 class Order(AggregateRoot):
-    id: OrderId            # 同一性で等価
-    total: Money           # 集約は VO / 子 Entity を包含し、他集約は ID でのみ参照
+    id: OrderId            # equality by identity
+    total: Money           # an aggregate composes VOs / child entities; other aggregates by ID only
 ```
 
-詳細な設計方針は [CLAUDE.md](CLAUDE.md) を参照してください。
+See [CLAUDE.md](CLAUDE.md) for the detailed design rationale.
 
-## 開発
+## Development
 
 ```bash
 uv sync
@@ -49,6 +53,6 @@ uv run ruff check src/ tests/
 uv run pyrefly check src/
 ```
 
-## ライセンス
+## License
 
 MIT
