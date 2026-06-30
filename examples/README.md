@@ -1,5 +1,13 @@
 # Examples
 
+## guardrails
+
+`python -m examples.guardrails` — the fastest way to feel what the library is for. It
+deliberately triggers each constraint to print the rejection and its message (mutable
+value object, multi-field identifier, aggregate held by instance, repository of a
+non-aggregate), then shows the runtime semantics (value equality, immutability, identity
+equality, event collection).
+
 ## shop
 
 An e-commerce domain spanning **three bounded contexts** and **five aggregate roots**,

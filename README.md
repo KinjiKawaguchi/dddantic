@@ -66,6 +66,35 @@ class OrderRepository(Repository[Order]):   # TRoot must be an AggregateRoot
 
 See [CLAUDE.md](CLAUDE.md) for the detailed design rationale.
 
+## What it catches
+
+Invalid models fail the moment the class is defined — not at runtime, not in review:
+
+```python
+class Tags(ValueObject):
+    items: list[str]
+# TypeError: Tags.items: ValueObject must be immutable and hashable;
+#            cannot contain mutable containers (list/set/dict). Use tuple/frozenset instead.
+
+class Transfer(AggregateRoot[AccountId]):
+    counterparty: Account          # another aggregate, held by instance
+# TypeError: Transfer.counterparty: cannot hold other aggregate Account as instance.
+#            Reference by Identifier (id) instead (Vernon: Reference Other Aggregates by Identity).
+
+class MoneyRepository(Repository[Money]):  # Money is not an AggregateRoot
+    ...
+# TypeError: MoneyRepository: Repository targets an AggregateRoot;
+#            Money is not an AggregateRoot subclass.
+```
+
+And the building blocks behave as DDD expects — value objects compare and hash by value
+and are frozen; entities compare by identity. See it all run with
+[`examples/guardrails.py`](examples/guardrails.py):
+
+```bash
+python -m examples.guardrails
+```
+
 ## Examples
 
 [`examples/shop`](examples/shop) is a runnable e-commerce domain spanning three bounded
