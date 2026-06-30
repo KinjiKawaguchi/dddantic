@@ -8,46 +8,36 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from dddantic import (
-    AggregateRoot,
-    DomainEvent,
-    Identifier,
-    Repository,
-    bounded_context,
-)
+from dddantic import AggregateRoot, DomainEvent, Identifier, Repository
 from examples.shop.catalog import ProductId
 from examples.shop.ordering import OrderId
 
+__bounded_context__ = "fulfillment"
 
-@bounded_context("fulfillment")
+
 class StockItemId(Identifier):
     value: str
 
 
-@bounded_context("fulfillment")
 class StockItem(AggregateRoot[StockItemId]):
     product: ProductId  # cross-context identity reference → catalog
     on_hand: int
 
 
-@bounded_context("fulfillment")
 class ShipmentId(Identifier):
     value: str
 
 
-@bounded_context("fulfillment")
 class ShipmentDispatched(DomainEvent):
     occurred_on: datetime
     shipment_id: str
 
 
-@bounded_context("fulfillment")
 class Shipment(AggregateRoot[ShipmentId]):
     order: OrderId  # cross-context identity reference → ordering
     dispatched: bool
 
 
-@bounded_context("fulfillment")
 class StockItemRepository(Repository[StockItem]):
     def __init__(self) -> None:
         self._items: dict[str, StockItem] = {}
@@ -59,7 +49,6 @@ class StockItemRepository(Repository[StockItem]):
         return self._items[item_id.value]
 
 
-@bounded_context("fulfillment")
 class ShipmentRepository(Repository[Shipment]):
     def __init__(self) -> None:
         self._shipments: dict[str, Shipment] = {}
