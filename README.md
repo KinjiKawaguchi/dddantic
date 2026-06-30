@@ -66,6 +66,17 @@ class OrderRepository(Repository[Order]):   # TRoot must be an AggregateRoot
 
 See [CLAUDE.md](CLAUDE.md) for the detailed design rationale.
 
+## Examples
+
+[`examples/shop`](examples/shop) is a runnable e-commerce domain spanning three bounded
+contexts and five aggregate roots that exercises every building block. It prints a
+context map and per-context class diagrams (also committed at
+[`examples/shop/diagram.md`](examples/shop/diagram.md)):
+
+```bash
+python -m examples.shop.render
+```
+
 ## Development
 
 ```bash
