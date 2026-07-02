@@ -35,15 +35,15 @@ deferred reporting, so that incorrect model definitions are never left in the re
 dddantic has three facets: typed building blocks, automatic visualization, and a **DDD
 linter** — the enforcement of DDD rules. The linter's authority must come from the DDD
 literature, not from our opinion, so every rule the library detects is catalogued in
-`dddantic.rules` **with its source citation** and a `grounding` marker: `DIRECT` (the
-source states the rule) or `DERIVED` (our enforcement of a cited principle, stated
+`dddantic.rules` **with its source citation** and a `grounding` marker: `STATED` (the
+source states the rule) or `INTERPRETED` (our enforcement of a cited principle, stated
 honestly as ours). `RULES.md` is generated from this catalog, and
 `tests/test_rules_conformance.py` verifies (across the whole pydantic v1/v2 matrix) that
 each catalogued rule is actually detected and that `RULES.md` has not drifted. So the
 documented rule set, the enforced rule set, and the cited sources are kept in lockstep —
 a rule may not be listed unless it is both sourced and proven to fire. New enforcement
 must add a catalog entry with a citation; if a check cannot be cited, it is our
-convention and must be marked `DERIVED` (or reconsidered).
+convention and must be marked `INTERPRETED` (or reconsidered).
 
 ### Base Classes Primary, Decorators Secondary
 

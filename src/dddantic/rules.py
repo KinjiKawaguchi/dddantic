@@ -6,9 +6,9 @@ generated from this catalog and ``tests/test_rules_conformance.py`` verifies tha
 rule is actually detected — so the documented rule set, the enforced rule set, and the
 cited sources never drift apart.
 
-Provenance is stated honestly: ``Grounding.DIRECT`` means the source states the rule;
-``Grounding.DERIVED`` means the rule is our enforcement of a cited principle, not a
-verbatim quote.
+Provenance is stated honestly: ``Grounding.STATED`` means the source states the rule;
+``Grounding.INTERPRETED`` means the rule is dddantic's enforcement/interpretation of a
+cited principle, not a verbatim quote (so it is more open to reasonable disagreement).
 """
 
 from __future__ import annotations
@@ -23,8 +23,8 @@ _VERNON = "Vernon, Implementing Domain-Driven Design (2013)"
 class Grounding(str, Enum):
     """How closely a rule follows its cited source."""
 
-    DIRECT = "direct"
-    DERIVED = "derived"
+    STATED = "stated"
+    INTERPRETED = "interpreted"
 
 
 @dataclass(frozen=True)
@@ -47,7 +47,7 @@ RULES: tuple[Rule, ...] = (
             "identity, never on attribute values."
         ),
         source=f"{_EVANS}, Ch. 5 — Entities (a thread of continuity and identity).",
-        grounding=Grounding.DIRECT,
+        grounding=Grounding.STATED,
     ),
     Rule(
         id="VO-IMMUTABLE",
@@ -57,7 +57,7 @@ RULES: tuple[Rule, ...] = (
             "with equal attributes are equal and hash alike."
         ),
         source=f"{_EVANS}, Ch. 5 — Value Objects (treat as immutable; equality by value).",
-        grounding=Grounding.DIRECT,
+        grounding=Grounding.STATED,
     ),
     Rule(
         id="VO-NO-MUTABLE-CONTAINER",
@@ -67,7 +67,7 @@ RULES: tuple[Rule, ...] = (
             "the object stays immutable and hashable."
         ),
         source=f"{_EVANS}, Ch. 5 — Value Objects (immutability); enforcement is dddantic's.",
-        grounding=Grounding.DERIVED,
+        grounding=Grounding.INTERPRETED,
     ),
     Rule(
         id="ID-SINGLE-VALUE",
@@ -77,7 +77,7 @@ RULES: tuple[Rule, ...] = (
             f"{_VERNON}, Ch. 5 — model identity as a Value Object; "
             "single-field is dddantic's reading."
         ),
-        grounding=Grounding.DERIVED,
+        grounding=Grounding.INTERPRETED,
     ),
     Rule(
         id="AGG-REF-BY-ID",
@@ -87,14 +87,14 @@ RULES: tuple[Rule, ...] = (
             "reference it by that aggregate's Identifier."
         ),
         source=f"{_VERNON}, Ch. 10 — Reference Other Aggregates by Identity.",
-        grounding=Grounding.DIRECT,
+        grounding=Grounding.STATED,
     ),
     Rule(
         id="REPO-FOR-AGG-ROOT",
         title="Repositories are provided only for aggregate roots",
         statement="A Repository's type parameter must be an AggregateRoot subclass.",
         source=f"{_EVANS}, Ch. 6 — provide Repositories only for Aggregate roots.",
-        grounding=Grounding.DIRECT,
+        grounding=Grounding.STATED,
     ),
     Rule(
         id="EVENT-IMMUTABLE-OCCURRED",
@@ -103,7 +103,7 @@ RULES: tuple[Rule, ...] = (
             "A DomainEvent is an immutable value object carrying an occurred_on timestamp."
         ),
         source=f"{_VERNON}, Ch. 8 — Domain Events; Fowler, Domain Event (2005).",
-        grounding=Grounding.DIRECT,
+        grounding=Grounding.STATED,
     ),
 )
 
@@ -124,8 +124,8 @@ def render_rules_md() -> str:
         "",
         f"Generated from `dddantic.rules`. Do not edit by hand — run {regen}.",
         "",
-        "`direct` = the source states the rule; "
-        "`derived` = dddantic's enforcement of a cited principle.",
+        "`stated` = the source states the rule; "
+        "`interpreted` = dddantic's enforcement of a cited principle.",
         "",
         "| ID | Rule | Grounding | Source |",
         "|---|---|---|---|",

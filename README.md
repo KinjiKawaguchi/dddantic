@@ -40,7 +40,7 @@ A Pydantic-based library for Domain-Driven Design with three facets:
 ## DDD rules
 
 The rules the library detects are a catalogue in `dddantic.rules`, each grounded in a
-DDD source (`direct` = the source states it; `derived` = our enforcement of a cited
+DDD source (`stated` = the source states it; `interpreted` = our enforcement of a cited
 principle). [RULES.md](RULES.md) is generated from that catalogue, and a conformance
 suite proves every listed rule is actually detected — so the documented rules, the
 enforced rules, and the citations never drift apart.
