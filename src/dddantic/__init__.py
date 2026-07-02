@@ -1,6 +1,6 @@
 """dddantic — Pydantic-based DDD tactical building blocks."""
 
-from dddantic import diagram
+from dddantic import diagram, rules
 from dddantic.building_blocks import (
     AggregateRoot,
     DomainEvent,
@@ -14,6 +14,7 @@ from dddantic.building_blocks import (
     bounded_context,
 )
 from dddantic.registry import ElementInfo, Registry, default_registry
+from dddantic.rules import Grounding, Rule
 
 __version__ = "0.1.0"
 
@@ -24,13 +25,16 @@ __all__ = [
     "ElementInfo",
     "Entity",
     "Factory",
+    "Grounding",
     "Identifier",
     "Registry",
     "Repository",
+    "Rule",
     "Specification",
     "ValueObject",
     "__version__",
     "bounded_context",
     "default_registry",
     "diagram",
+    "rules",
 ]
