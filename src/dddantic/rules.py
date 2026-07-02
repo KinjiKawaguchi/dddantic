@@ -115,14 +115,11 @@ def rules() -> tuple[Rule, ...]:
 
 def render_rules_md() -> str:
     """Render ``RULES.md`` from the catalog. The committed file must equal this output."""
-    regen = (
-        '`python -c "from dddantic.rules import render_rules_md as r; '
-        "open('RULES.md','w').write(r())\"`"
-    )
     lines = [
         "# DDD rules dddantic detects",
         "",
-        f"Generated from `dddantic.rules`. Do not edit by hand — run {regen}.",
+        "Generated from `dddantic.rules`. Do not edit by hand — run "
+        "`python scripts/gen_rules.py --write`.",
         "",
         "`stated` = the source states the rule; "
         "`interpreted` = dddantic's enforcement of a cited principle.",

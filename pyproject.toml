@@ -84,6 +84,7 @@ ignore = [
 "src/dddantic/building_blocks/_behavior.py" = ["ANN401"]
 "tests/**/*.py" = ["S101", "ANN", "D", "PLR2004", "SLF001", "TC001", "TC003", "DTZ001"]
 "examples/**/*.py" = ["T201", "TC001", "TC003"]
+"scripts/**/*.py" = ["T201", "INP001"]
 
 [tool.pyrefly]
 project-includes = ["src"]

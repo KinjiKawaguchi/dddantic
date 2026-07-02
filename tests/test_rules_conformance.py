@@ -138,5 +138,8 @@ def test_every_catalogued_rule_has_a_conformance_check():
 
 
 def test_rules_md_matches_catalog():
-    committed = Path("RULES.md").read_text(encoding="utf-8")
-    assert committed == render_rules_md(), "RULES.md is stale; regenerate it from dddantic.rules"
+    rules_md = Path(__file__).resolve().parents[1] / "RULES.md"
+    committed = rules_md.read_text(encoding="utf-8")
+    assert committed == render_rules_md(), (
+        "RULES.md is stale; run `python scripts/gen_rules.py --write`"
+    )
