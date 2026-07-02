@@ -2,10 +2,12 @@
 
 > ⚠️ Early development (alpha). The API is not yet stable.
 
-A Pydantic-based library that provides the tactical building blocks of DDD
-(Domain-Driven Design) as **typed components**. It enforces DDD invariants on each
-element and analyzes the models you define to **generate model diagrams (Mermaid)
-and context maps**.
+A Pydantic-based library for Domain-Driven Design with three facets:
+
+1. **Typed building blocks** — the tactical DDD patterns as typed components.
+2. **Automatic visualization** — Mermaid class diagrams and context maps from your model.
+3. **A DDD linter** — a catalogue of DDD rules, each cited to its source and verified to
+   be detected. See [RULES.md](RULES.md).
 
 ## Features
 
@@ -34,6 +36,21 @@ and context maps**.
 | Repository | `Repository[TRoot]` | `TRoot` must be an `AggregateRoot` |
 | Domain Service | `DomainService` | marker (registry / diagram participation) |
 | Factory | `Factory` | marker (registry / diagram participation) |
+
+## DDD rules
+
+The rules the library detects are a catalogue in `dddantic.rules`, each grounded in a
+DDD source (`stated` = the source states it; `interpreted` = our enforcement of a cited
+principle). [RULES.md](RULES.md) is generated from that catalogue, and a conformance
+suite proves every listed rule is actually detected — so the documented rules, the
+enforced rules, and the citations never drift apart.
+
+```python
+from dddantic import rules
+
+for rule in rules.rules():
+    print(rule.id, "—", rule.grounding.value, "—", rule.source)
+```
 
 ## Installation
 
